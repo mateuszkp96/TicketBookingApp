@@ -9,7 +9,6 @@ import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 @Entity
 @Data
@@ -35,6 +34,6 @@ public class Reservation {
     private BigDecimal payment;
 
     @OneToMany(mappedBy = "reservation", fetch = LAZY)
-    private List<Ticket> seats;
+    private List<Ticket> tickets;
 
 }
