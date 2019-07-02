@@ -29,6 +29,6 @@ public class ScreeningService {
     }
 
     public List<RoomSeat> findAvailableSeats(Long screeningID) {
-        return roomSeatRepository.findAvailableSeats(screeningID);
+        return roomSeatRepository.findAvailableRoomSeats(screeningID);
     }
 }
