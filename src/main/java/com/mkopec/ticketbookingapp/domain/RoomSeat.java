@@ -23,4 +23,7 @@ public class RoomSeat {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
+
+    @Column(name = "is_on_edge")
+    private Boolean isOnEdge;
 }

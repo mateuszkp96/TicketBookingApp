@@ -54,18 +54,46 @@ FROM sequence_of_int;
 -- ---------------------------------------------------------------
 -- table: RoomSeat
 -- ---------------------------------------------------------------
-INSERT INTO room_seat(room_id, seat_id)
-SELECT room.id, seat.id
+INSERT INTO room_seat(room_id, seat_id, is_on_edge)
+SELECT room.id, seat.id, FALSE
 FROM room,
      seat;
+
+-- after insert of all room_seats we know which ones are on the edge
+UPDATE room_seat
+SET room_seat.is_on_edge = TRUE
+WHERE room_seat.id IN
+      (SELECT rs.id
+       FROM room_seat rs
+                JOIN seat s ON rs.seat_id = s.id
+                JOIN (SELECT rs.room_id AS rid, s.row_name AS r, MAX(s.number) AS m
+                      FROM room_seat rs
+                               JOIN seat s ON rs.seat_id = s.id
+                      GROUP BY rid, r
+                      UNION
+                      SELECT rs.room_id AS rid, s.row_name AS r, MIN(s.number) AS m
+                      FROM room_seat rs
+                               JOIN seat s ON rs.seat_id = s.id
+                      GROUP BY rid, r) AS temp
+       WHERE rs.room_id = temp.rid
+         AND s.row_name = temp.r
+         AND s.number = temp.m);
 
 -- ---------------------------------------------------------------
 -- table: Movie
 -- ---------------------------------------------------------------
-INSERT INTO movie(title, director, length)
-VALUES ('Pulp Fiction', 'Quentin Tarantino', '02:34:00'),
-       ('Incepcja', 'Christopher Nolan', '02:28:00'),
-       ('Lot nad kukułczym gniazdem', 'Miros Forman', '02:13:00');
+INSERT INTO movie( title
+                 , director
+                 , length)
+VALUES ('Pulp Fiction',
+        'Quentin Tarantino',
+        '02:34:00'),
+       ('Incepcja',
+        'Christopher Nolan',
+        '02:28:00'),
+       ('Lot nad kukułczym gniazdem',
+        'Miros Forman',
+        '02:13:00');
 
 -- ---------------------------------------------------------------
 -- table: Screening
@@ -79,6 +107,9 @@ FROM screening_times AS t
 UNION
 SELECT 3, 3, t.*
 FROM screening_times AS t;
+
+INSERT INTO screening(room_id, movie_id, date)
+VALUES (4, 3, '2019-07-01 09:20:00');
 
 -- ---------------------------------------------------------------
 -- table: TicketType

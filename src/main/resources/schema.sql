@@ -30,9 +30,10 @@ CREATE INDEX idx_room_number ON room (number);
 -- ---------------------------------------------------------------
 CREATE TABLE room_seat
 (
-    id      BIGINT NOT NULL AUTO_INCREMENT,
-    room_id BIGINT NOT NULL,
-    seat_id BIGINT NOT NULL,
+    id         BIGINT  NOT NULL AUTO_INCREMENT,
+    room_id    BIGINT  NOT NULL,
+    seat_id    BIGINT  NOT NULL,
+    is_on_edge BOOLEAN NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (room_id) REFERENCES room (id),
     FOREIGN KEY (seat_id) REFERENCES seat (id),
