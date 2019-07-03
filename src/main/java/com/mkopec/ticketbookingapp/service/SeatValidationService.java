@@ -1,6 +1,7 @@
 package com.mkopec.ticketbookingapp.service;
 
 import com.mkopec.ticketbookingapp.domain.RoomSeat;
+import com.mkopec.ticketbookingapp.exception.ArgumentNotValidException;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -40,7 +41,7 @@ public class SeatValidationService {
 
     private static final int NUM_OF_NEIGHBOURS = 2;
 
-    boolean validate(List<RoomSeat> reservedSeats, List<RoomSeat> occupiedSeats, List<RoomSeat> allSeats) throws IllegalArgumentException {
+    boolean validate(List<RoomSeat> reservedSeats, List<RoomSeat> occupiedSeats, List<RoomSeat> allSeats) throws ArgumentNotValidException {
         Map<RoomSeat, SeatModel> seats = initializeSeatModels(reservedSeats, occupiedSeats, allSeats);
 
         // sorting allows to take neighbour of seat
@@ -64,7 +65,7 @@ public class SeatValidationService {
                             if (isReservationValidForSeatModel(neighbourhood, model)) {
                                 model.seatType = SeatType.RESERVATION_DONE;
                             } else {
-                                throw new IllegalArgumentException("Dont left single seat near seat: " + model.roomSeat.getId());
+                                throw new ArgumentNotValidException("Dont left single seat near seat: " + model.roomSeat.getId());
                             }
                             break;
                         }
@@ -91,7 +92,7 @@ public class SeatValidationService {
                 if (!seatModel.seatType.equals(SeatType.OCCUPIED)) {
                     seatModel.reserved = true;
                 } else {
-                    throw new IllegalArgumentException("Seat with ID: " + seatModel.roomSeat.getId() + " is already reserved");
+                    throw new ArgumentNotValidException("Seat with ID: " + seatModel.roomSeat.getId() + " is already reserved");
                 }
             }
         });
