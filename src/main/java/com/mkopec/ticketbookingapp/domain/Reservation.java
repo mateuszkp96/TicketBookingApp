@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -33,7 +34,6 @@ public class Reservation {
 
     private BigDecimal payment;
 
-    @OneToMany(mappedBy = "reservation", fetch = LAZY)
+    @OneToMany(mappedBy = "reservation", fetch = LAZY, cascade = PERSIST)
     private List<Ticket> tickets;
-
 }

@@ -20,7 +20,14 @@ public class ReservationService {
 
     @Transactional
     public Reservation saveReservation(Reservation reservation) {
-        
+
+        reservation.getTickets().forEach(
+                ticket -> {
+                    ticket.setReservation(reservation);
+                    ticket.setScreening(reservation.getScreening());
+                }
+        );
+
         validationService.validate(reservation);
         reservation.setExpirationTime(validationService.getExpirationTime(reservation));
 
