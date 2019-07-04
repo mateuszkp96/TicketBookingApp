@@ -2,6 +2,7 @@ package com.mkopec.ticketbookingapp.service;
 
 import com.mkopec.ticketbookingapp.domain.RoomSeat;
 import com.mkopec.ticketbookingapp.domain.Seat;
+import com.mkopec.ticketbookingapp.exception.ArgumentNotValidException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -14,7 +15,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.runners.Parameterized.Parameters;
 
@@ -114,7 +114,6 @@ public class SeatValidationServiceTest {
 
             return Arrays.asList(new Object[][]{
                     // reserved ------ occupied -------- all seats
-                    // TODO set input for bad results
                     {getElements(rs, 2), getElements(rs, 0), rs},
                     {getElements(rs, 2), getElements(rs, 0, 4), rs},
             });
@@ -125,9 +124,9 @@ public class SeatValidationServiceTest {
             service = new SeatValidationService();
         }
 
-        @Test
+        @Test(expected = ArgumentNotValidException.class)
         public void test_validate_bad() {
-            assertFalse(service.validate(reserved, occupied, all));
+           service.validate(reserved, occupied, all);
         }
     }
 
@@ -139,7 +138,7 @@ public class SeatValidationServiceTest {
             service = new SeatValidationService();
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test(expected = ArgumentNotValidException.class)
         public void test_validate_occupied_seat_throw_exception() {
             List<RoomSeat> rs = getRoomSeats();
             service.validate(getElements(rs, 1), getElements(rs, 0, 1), rs);
